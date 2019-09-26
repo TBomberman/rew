@@ -88,8 +88,8 @@ def get_listings_data():
                     indexes[9] = count
                 if item.startswith('Title'):
                     indexes[10] = count
-                if item.startswith('Area'):
-                    indexes[11] = count
+                # if item.startswith('Area'):
+                #     indexes[11] = count
                 if item.startswith('Sub-Area/Community'):
                     indexes[12] = count
                 if item == 'Listing ID':
@@ -107,7 +107,7 @@ def get_listings_data():
             type = parser.data[indexes[8]]
             dom = parser.data[indexes[9]]
             title = parser.data[indexes[10]]
-            area = parser.data[indexes[11]]
+            # area = parser.data[indexes[11]]
             subarea = parser.data[indexes[12]]
             listing_id = parser.data[indexes[13]]
 
@@ -122,7 +122,7 @@ def get_listings_data():
                   + hoa + ', '
                   + type + ', '
                   + title + ', '
-                  + area + ', '
+                  # + area + ', '
                   + subarea + ', '
                   + dom)
 

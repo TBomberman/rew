@@ -63,7 +63,7 @@ def get_listings_data():
             xmlstring = response.data.decode("utf-8").replace('\n', '')
             parser.feed(xmlstring)
 
-            indexes = [None] * 14
+            indexes = [0] * 14
             count = 1
             for item in parser.data:
                 if item.startswith('Search Results'):
@@ -88,13 +88,15 @@ def get_listings_data():
                     indexes[9] = count
                 if item.startswith('Title'):
                     indexes[10] = count
-                # if item.startswith('Area'):
-                #     indexes[11] = count
+                if item.startswith('Area'):
+                    indexes[11] = count
                 if item.startswith('Sub-Area/Community'):
                     indexes[12] = count
                 if item == 'Listing ID':
                     indexes[13] = count
                 count += 1
+
+            parser.data[0] = ''
 
             address = parser.data[indexes[0]]
             price = parser.data[indexes[1]]
@@ -107,23 +109,23 @@ def get_listings_data():
             type = parser.data[indexes[8]]
             dom = parser.data[indexes[9]]
             title = parser.data[indexes[10]]
-            # area = parser.data[indexes[11]]
+            area = parser.data[indexes[11]]
             subarea = parser.data[indexes[12]]
             listing_id = parser.data[indexes[13]]
 
-            print(listing_id + ', '
-                  + address + ', '
-                  + price + ', '
-                  + beds + ', '
-                  + baths + ', '
-                  + sqft + ', '
-                  + age + ', '
-                  + tax + ', '
-                  + hoa + ', '
-                  + type + ', '
-                  + title + ', '
-                  # + area + ', '
-                  + subarea + ', '
+            print(listing_id + '\t'
+                  + address + '\t'
+                  + price + '\t'
+                  + beds + '\t'
+                  + baths + '\t'
+                  + sqft + '\t'
+                  + age + '\t'
+                  + tax + '\t'
+                  + hoa + '\t'
+                  + type + '\t'
+                  + title + '\t'
+                  + area + '\t'
+                  + subarea + '\t'
                   + dom)
 
 get_listings_data()

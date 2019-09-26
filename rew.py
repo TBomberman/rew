@@ -31,20 +31,19 @@ def get_area_listings(location, num_bedrooms):
         response = http.request('GET', url_page, headers=headers)
         xmlstring = response.data.decode("utf-8").replace('\n', '')
         parser.feed(xmlstring)
-    print('done', location)
-
-num_bedrooms = 3
-
-with open('Data/areas.csv') as csv_file:
-    csv_reader = csv.reader(csv_file)
-    for row in csv_reader:
-        get_area_listings(row[0], num_bedrooms)
 
 # href="/properties/R2408510/803-6282-kathleen-avenue-burnaby-bc?search_id=burnaby-bc&amp;search_params%5Bquery%5D=Burnaby%2C+BC&amp;search_params%5Bsearchable_id%5D=13&amp;search_params%5Bsearchable_type%5D=Geography&amp;search_type=geography_browse"
 # url = domain + href
 # response = http.request('GET', url, headers=headers)
 # print(response.status)
 
+def get_property_urls():
+    num_bedrooms = 2
 
+    with open('Data/areas.csv') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        for row in csv_reader:
+            get_area_listings(row[0], num_bedrooms)
 
-
+# def get_listnigs_data():
+#

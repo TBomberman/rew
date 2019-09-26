@@ -54,28 +54,62 @@ class ListingParser(HTMLParser):
 
 def get_listings_data():
     parser = ListingParser()
-    parser.data = []
     with open('Data/property_3br_urls.csv') as csv_file:
         csv_reader = csv.reader(csv_file)
         for row in csv_reader:
+            parser.data = []
             listing_url = domain + row[0]
             response = http.request('GET', listing_url, headers=headers)
             xmlstring = response.data.decode("utf-8").replace('\n', '')
             parser.feed(xmlstring)
-            address = parser.data[55]
-            price = parser.data[64]
-            beds = parser.data[75]
-            baths = parser.data[77]
-            sqft = parser.data[79]
-            age = parser.data[116]
-            tax = parser.data[118]
-            hoa = parser.data[120]
-            type = parser.data[81]
-            dom = parser.data[138]
-            title = parser.data[128]
-            area = parser.data[124]
-            subarea = parser.data[122]
-            listing_id = parser.data[132]
+
+            indexes = [None] * 14
+            count = 1
+            for item in parser.data:
+                if item.startswith('Search Results'):
+                    indexes[0] = count
+                if item.startswith('Listing ID: '):
+                    indexes[1] = count
+                if item.startswith('Bed'):
+                    indexes[2] = count - 2
+                if item.startswith('Bath'):
+                    indexes[3] = count - 2
+                if item.startswith('Sqft'):
+                    indexes[4] = count - 2
+                if item.startswith('Property Age'):
+                    indexes[5] = count
+                if item.startswith('Gross Taxes'):
+                    indexes[6] = count
+                if item.startswith('Strata Maintenance Fees'):
+                    indexes[7] = count
+                if item.startswith('Property Type'):
+                    indexes[8] = count
+                if item.startswith('Days on REW'):
+                    indexes[9] = count
+                if item.startswith('Title'):
+                    indexes[10] = count
+                if item.startswith('Area'):
+                    indexes[11] = count
+                if item.startswith('Sub-Area/Community'):
+                    indexes[12] = count
+                if item == 'Listing ID':
+                    indexes[13] = count
+                count += 1
+
+            address = parser.data[indexes[0]]
+            price = parser.data[indexes[1]]
+            beds = parser.data[indexes[2]]
+            baths = parser.data[indexes[3]]
+            sqft = parser.data[indexes[4]]
+            age = parser.data[indexes[5]]
+            tax = parser.data[indexes[6]]
+            hoa = parser.data[indexes[7]]
+            type = parser.data[indexes[8]]
+            dom = parser.data[indexes[9]]
+            title = parser.data[indexes[10]]
+            area = parser.data[indexes[11]]
+            subarea = parser.data[indexes[12]]
+            listing_id = parser.data[indexes[13]]
 
             print(listing_id + ', '
                   + address + ', '

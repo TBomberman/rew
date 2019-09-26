@@ -7,6 +7,7 @@ headers = {
     'user-agent': 'Mozilla'
 }
 http = urllib3.PoolManager()
+domain = 'https://www.rew.ca'
 
 class MyHTMLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
@@ -32,10 +33,6 @@ def get_area_listings(location, num_bedrooms):
         xmlstring = response.data.decode("utf-8").replace('\n', '')
         parser.feed(xmlstring)
 
-# href="/properties/R2408510/803-6282-kathleen-avenue-burnaby-bc?search_id=burnaby-bc&amp;search_params%5Bquery%5D=Burnaby%2C+BC&amp;search_params%5Bsearchable_id%5D=13&amp;search_params%5Bsearchable_type%5D=Geography&amp;search_type=geography_browse"
-# url = domain + href
-# response = http.request('GET', url, headers=headers)
-# print(response.status)
 
 def get_property_urls():
     num_bedrooms = 2
@@ -45,5 +42,54 @@ def get_property_urls():
         for row in csv_reader:
             get_area_listings(row[0], num_bedrooms)
 
-# def get_listnigs_data():
-#
+
+class ListingParser(HTMLParser):
+    # def handle_starttag(self, tag, attrs):
+    #     if tag == 'div':
+    #         if attrs[0][0] == 'class' and attrs[0][1] == 'propertyheader-price':
+    #             self.price = 0
+    def handle_data(self, data):
+        self.data.append(data)
+
+
+def get_listings_data():
+    parser = ListingParser()
+    parser.data = []
+    with open('Data/property_3br_urls.csv') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        for row in csv_reader:
+            listing_url = domain + row[0]
+            response = http.request('GET', listing_url, headers=headers)
+            xmlstring = response.data.decode("utf-8").replace('\n', '')
+            parser.feed(xmlstring)
+            address = parser.data[55]
+            price = parser.data[64]
+            beds = parser.data[75]
+            baths = parser.data[77]
+            sqft = parser.data[79]
+            age = parser.data[116]
+            tax = parser.data[118]
+            hoa = parser.data[120]
+            type = parser.data[81]
+            dom = parser.data[138]
+            title = parser.data[128]
+            area = parser.data[124]
+            subarea = parser.data[122]
+            listing_id = parser.data[132]
+
+            print(listing_id + ', '
+                  + address + ', '
+                  + price + ', '
+                  + beds + ', '
+                  + baths + ', '
+                  + sqft + ', '
+                  + age + ', '
+                  + tax + ', '
+                  + hoa + ', '
+                  + type + ', '
+                  + title + ', '
+                  + area + ', '
+                  + subarea + ', '
+                  + dom)
+
+get_listings_data()

@@ -1,3 +1,11 @@
+# #==============this code added==================================================================:
+# import sys
+# sys.path.append("pydevd-pycharm.egg")
+# import pydevd_pycharm
+#
+# pydevd_pycharm.settrace('207.216.103.218', port=30266, stdoutToServer=True, stderrToServer=True)
+# #================================================================================================
+
 import urllib3
 from html.parser import HTMLParser
 import csv
@@ -12,9 +20,9 @@ domain = 'https://www.rew.ca'
 class MyHTMLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         if tag == 'a':
-            if attrs[0][0] == "itemprop":
-                if len(attrs) == 3:
-                    url = attrs[2][1]
+            if attrs[0][0] == "title":
+                if len(attrs) == 2:
+                    url = attrs[1][1]
                     print(url.split('?')[0])
             if attrs[0][0] == "total_pages":
                 self.total_pages = int(attrs[0][1])
@@ -135,6 +143,6 @@ def get_listings_data():
                   + subarea + '\t'
                   + dom)
 
-# get_property_urls()
-get_listings_data()
+get_property_urls()
+# get_listings_data()
 
